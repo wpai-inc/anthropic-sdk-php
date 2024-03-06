@@ -2,10 +2,11 @@
 
 namespace WpAi\Anthropic;
 
-use WpAi\Anthropic\Responses\ErrorResponse;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\StreamInterface;
+use WpAi\Anthropic\Exceptions\ClientException as AnthropicClientException;
+use WpAi\Anthropic\Responses\ErrorResponse;
 
 class Client
 {
@@ -27,22 +28,32 @@ class Client
             ]);
 
             return json_decode($response->getBody()->getContents(), true);
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $data = json_decode($response->getBody()->getContents(), true);
-
-            return new ErrorResponse($data);
+        } catch (RequestException $e) {
+            $this->badRequest($e);
         }
 
     }
 
     public function stream(string $endpoint, array $args): StreamInterface
     {
-        $response = $this->client->post($endpoint, [
-            'json' => $args,
-            'stream' => true,
-        ]);
+        try {
+            $response = $this->client->post($endpoint, [
+                'json' => $args,
+                'stream' => true,
+            ]);
 
-        return $response->getBody();
+            return $response->getBody();
+        } catch (RequestException $e) {
+            $this->badRequest($e);
+        }
+    }
+
+    private function badRequest(RequestException $e): void
+    {
+        $response = $e->getResponse();
+        $data = json_decode($response->getBody()->getContents(), true);
+        $error = (new ErrorResponse($data))->getError();
+
+        throw new AnthropicClientException($error->getMessage(), $response->getStatusCode(), $e);
     }
 }
