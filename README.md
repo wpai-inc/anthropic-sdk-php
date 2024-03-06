@@ -1,3 +1,59 @@
 # Anthropic PHP SDK
 
 This library provides convenient access to the Anthropic REST API from server-side PHP
+
+## Installation
+
+```sh
+composer require wpai-inc/anthropic-sdk-php
+```
+
+## Usage
+
+Set your API key in the constructor:
+
+```php
+$anthropic = new \WpAi\Anthropic\AnthropicAPI($apiKey);
+```
+
+### Messages Resource
+
+The only resource available is `/messages`. Note, `/completions` is deprecated and so isn't available in this library.
+
+```php
+$messages = [
+    [
+        'role' => 'user',
+        'content' => 'How can you help me?',
+    ],
+];
+$options = [
+    'model' => 'claude-3-opus-20240229',
+    'maxTokens' => 1024,
+    'messages' => $messages,
+];
+
+$anthropic->messages()->create($options);
+```
+
+The options above are required. You may also set them fluently like this:
+
+```php
+$anthropic->messages()->maxTokens(2048)->create($messages);
+```
+
+All other optional [options](https://docs.anthropic.com/claude/reference/messages_post) can be set in the same ways.
+
+#### Stream
+
+A streamed response follows all of the same options as `create()` but may be invoked with:
+
+```php
+$anthropic->messages()->stream($options);
+
+while (! $stream->eof()) {
+    echo $stream->read(1024);
+    ob_flush();
+    flush();
+}
+```
