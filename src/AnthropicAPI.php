@@ -12,8 +12,12 @@ class AnthropicAPI
 
     private Client $client;
 
-    public function __construct(private string $apiKey)
+    public function __construct(private string $apiKey, string $apiVersion = null)
     {
+        if ($apiVersion) {
+            $this->version = $apiVersion;
+        }
+        
         $this->client = new Client($this->baseUrl, $this->headers());
     }
 

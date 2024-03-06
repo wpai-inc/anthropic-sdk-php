@@ -57,3 +57,35 @@ while (! $stream->eof()) {
     flush();
 }
 ```
+
+## Laravel
+
+This library may also be used in Laravel.
+
+```php
+use WpAi\Anthropic\Facades\Anthropic;
+
+// Create a message
+$response = Anthropic::messages()
+    ->model('claude-v1')
+    ->maxTokens(100)
+    ->messages([
+        ['role' => 'user', 'content' => 'Hello, Claude!'],
+    ])
+    ->create();
+
+// Stream a message
+$stream = Anthropic::messages()
+    ->model('claude-v1')
+    ->maxTokens(100)
+    ->messages([
+        ['role' => 'user', 'content' => 'Tell me a story.'],
+    ])
+    ->stream();
+```
+
+Publish the config with:
+
+```sh
+php artisan vendor:publish --provider="WpAi\Anthropic\AnthropicServiceProvider" --tag="config"
+```
