@@ -2,9 +2,9 @@
 
 namespace WpAi\Anthropic\Providers;
 
-use WpAi\Anthropic\AnthropicAPI;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
+use WpAi\Anthropic\AnthropicAPI;
 
 class AnthropicServiceProvider extends ServiceProvider
 {
@@ -19,6 +19,10 @@ class AnthropicServiceProvider extends ServiceProvider
                 Config::get('anthropic.api_version')
             );
         });
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/anthropic.php', 'anthropic'
+        );
     }
 
     /**
@@ -26,10 +30,8 @@ class AnthropicServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/anthropic.php' => Config::get('anthropic.php'),
-            ], 'config');
-        }
+        $this->publishes([
+            __DIR__.'/../config/anthropic.php' => config_path('anthropic.php'),
+        ]);
     }
 }

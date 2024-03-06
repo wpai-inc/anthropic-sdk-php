@@ -87,5 +87,5 @@ $stream = Anthropic::messages()
 Publish the config with:
 
 ```sh
-php artisan vendor:publish --provider="WpAi\Anthropic\AnthropicServiceProvider" --tag="config"
+php artisan vendor:publish --provider="WpAi\Anthropic\Providers\AnthropicServiceProvider"
 ```
