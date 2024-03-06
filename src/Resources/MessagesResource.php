@@ -2,11 +2,11 @@
 
 namespace WpAi\Anthropic\Resources;
 
+use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use WpAi\Anthropic\Contracts\APIResource;
 use WpAi\Anthropic\Responses\MessageResponse;
 use WpAi\Anthropic\Responses\Response;
-use InvalidArgumentException;
-use Psr\Http\Message\StreamInterface;
 
 class MessagesResource extends APIResource
 {
