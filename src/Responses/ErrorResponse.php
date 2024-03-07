@@ -2,14 +2,17 @@
 
 namespace WpAi\Anthropic\Responses;
 
+use Psr\Http\Message\ResponseInterface;
+
 class ErrorResponse extends Response
 {
     private string $type;
 
     private ErrorDetails $error;
 
-    public function __construct(array $data)
+    public function __construct(protected ResponseInterface $response)
     {
+        $data = json_decode($this->response->getBody()->getContents(), true);
         $this->type = $data['type'];
         $this->error = new ErrorDetails($data['error']);
     }

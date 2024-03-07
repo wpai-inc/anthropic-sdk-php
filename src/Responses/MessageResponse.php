@@ -2,6 +2,8 @@
 
 namespace WpAi\Anthropic\Responses;
 
+use Psr\Http\Message\ResponseInterface;
+
 class MessageResponse extends Response
 {
     public string $id;
@@ -20,8 +22,10 @@ class MessageResponse extends Response
 
     public Usage $usage;
 
-    public function __construct(array $data)
+    public function __construct(protected ResponseInterface $response)
     {
+        $data = json_decode($this->response->getBody()->getContents(), true);
+
         $this->id = $data['id'];
         $this->type = $data['type'];
         $this->role = $data['role'];

@@ -4,9 +4,9 @@ namespace WpAi\Anthropic;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\StreamInterface;
 use WpAi\Anthropic\Exceptions\ClientException as AnthropicClientException;
 use WpAi\Anthropic\Responses\ErrorResponse;
+use WpAi\Anthropic\Responses\StreamResponse;
 
 class Client
 {
@@ -34,7 +34,7 @@ class Client
 
     }
 
-    public function stream(string $endpoint, array $args): StreamInterface
+    public function stream(string $endpoint, array $args): StreamResponse
     {
         try {
             $response = $this->client->post($endpoint, [
@@ -42,7 +42,7 @@ class Client
                 'stream' => true,
             ]);
 
-            return $response->getBody();
+            return new StreamResponse($response);
         } catch (RequestException $e) {
             $this->badRequest($e);
         }
@@ -51,8 +51,7 @@ class Client
     private function badRequest(RequestException $e): void
     {
         $response = $e->getResponse();
-        $data = json_decode($response->getBody()->getContents(), true);
-        $error = (new ErrorResponse($data))->getError();
+        $error = (new ErrorResponse($response))->getError();
 
         throw new AnthropicClientException($error->getMessage(), $response->getStatusCode(), $e);
     }

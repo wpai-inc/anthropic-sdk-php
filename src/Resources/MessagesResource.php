@@ -3,10 +3,10 @@
 namespace WpAi\Anthropic\Resources;
 
 use InvalidArgumentException;
-use Psr\Http\Message\StreamInterface;
 use WpAi\Anthropic\Contracts\APIResource;
 use WpAi\Anthropic\Responses\MessageResponse;
 use WpAi\Anthropic\Responses\Response;
+use WpAi\Anthropic\Responses\StreamResponse;
 
 class MessagesResource extends APIResource
 {
@@ -111,7 +111,7 @@ class MessagesResource extends APIResource
         return new MessageResponse($data);
     }
 
-    public function stream(array $options = []): StreamInterface
+    public function stream(array $options = []): StreamResponse
     {
         $this->validateOptions($options);
 
