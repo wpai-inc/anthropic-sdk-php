@@ -101,14 +101,9 @@ class MessagesResource extends APIResource
     public function create(array $options = []): Response
     {
         $this->validateOptions($options);
+        $res = $this->client->post($this->endpoint, $this->request());
 
-        $data = $this->client->post($this->endpoint, [
-            'model' => $this->model,
-            'max_tokens' => $this->maxTokens,
-            'messages' => $this->messages,
-        ]);
-
-        return new MessageResponse($data);
+        return new MessageResponse($res);
     }
 
     public function stream(array $options = []): StreamResponse
@@ -116,11 +111,27 @@ class MessagesResource extends APIResource
         $this->validateOptions($options);
 
         return $this->client->stream($this->endpoint, [
+            ...$this->request(),
+            'stream' => true,
+        ]);
+    }
+
+    private function request(): array
+    {
+        $optional = array_filter([
+            'system' => $this->system,
+            'metadata' => $this->metadata,
+            'temperature' => $this->temperature,
+            'top_p' => $this->topP,
+            'top_k' => $this->topK,
+        ]);
+
+        return [
             'model' => $this->model,
             'max_tokens' => $this->maxTokens,
             'messages' => $this->messages,
-            'stream' => true,
-        ]);
+            ...$optional,
+        ];
     }
 
     private function validateOptions(array $options = []): void

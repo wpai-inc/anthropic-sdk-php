@@ -4,6 +4,7 @@ namespace WpAi\Anthropic;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
 use WpAi\Anthropic\Exceptions\ClientException as AnthropicClientException;
 use WpAi\Anthropic\Responses\ErrorResponse;
 use WpAi\Anthropic\Responses\StreamResponse;
@@ -20,14 +21,12 @@ class Client
         ]);
     }
 
-    public function post(string $endpoint, array $args): array|ErrorResponse
+    public function post(string $endpoint, array $args): ResponseInterface|ErrorResponse
     {
         try {
-            $response = $this->client->post($endpoint, [
+            return $this->client->post($endpoint, [
                 'json' => $args,
             ]);
-
-            return json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $e) {
             $this->badRequest($e);
         }
