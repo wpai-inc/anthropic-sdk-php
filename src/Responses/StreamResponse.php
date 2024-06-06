@@ -1,12 +1,12 @@
 <?php
 
-namespace WpAi\Anthropic\Responses;
+namespace ErsinDemirtas\Anthropic\Responses;
 
 use Generator;
 use IteratorAggregate;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use WpAi\Anthropic\Exceptions\StreamException;
+use ErsinDemirtas\Anthropic\Exceptions\StreamException;
 
 class StreamResponse extends Response implements IteratorAggregate
 {
