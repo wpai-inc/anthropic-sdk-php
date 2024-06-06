@@ -1,5 +1,5 @@
 {
-    "name": "wpai-inc/anthropic-sdk-php",
+    "name": "ersin-demirtas/anthropic-sdk-php",
     "description": "This library provides convenient access to the Anthropic REST API from server-side PHP",
     "type": "library",
     "require": {
@@ -10,16 +10,16 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "WpAi\\Anthropic\\": "src/"
+            "ErsinDemirtas\\Anthropic\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "WpAi\\Anthropic\\Providers\\AnthropicServiceProvider"
+                "ErsinDemirtas\\Anthropic\\Providers\\AnthropicServiceProvider"
             ],
             "aliases": {
-                "Anthropic": "WpAi\\Anthropic\\Facades\\Anthropic"
+                "Anthropic": "ErsinDemirtas\\Anthropic\\Facades\\Anthropic"
             }
         }
     },
@@ -27,6 +27,10 @@
         {
             "name": "Greg Hunt",
             "email": "greg@codewp.ai"
+        },
+        {
+            "name": "Ersin demirtas",
+            "email": "ed5+anthropic-sdk-php@me.com"
         }
     ]
 }
