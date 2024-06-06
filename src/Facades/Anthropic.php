@@ -1,6 +1,6 @@
 <?php
 
-namespace WpAi\Anthropic\Facades;
+namespace ErsinDemirtas\Anthropic\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,6 +8,6 @@ class Anthropic extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \WpAi\Anthropic\AnthropicAPI::class;
+        return \ErsinDemirtas\Anthropic\AnthropicAPI::class;
     }
 }
