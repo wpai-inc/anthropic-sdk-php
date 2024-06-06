@@ -5,7 +5,7 @@ This library provides convenient access to the Anthropic REST API from server-si
 ## Installation
 
 ```sh
-composer require wpai-inc/anthropic-sdk-php
+composer require ersin-demirtas/anthropic-sdk-php
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ composer require wpai-inc/anthropic-sdk-php
 Set your API key in the constructor:
 
 ```php
-$anthropic = new \WpAi\Anthropic\AnthropicAPI($apiKey);
+$anthropic = new \ErsinDemirtas\Anthropic\AnthropicAPI($apiKey);
 ```
 
 ### Messages Resource
@@ -63,7 +63,7 @@ while (! $stream->eof()) {
 This library may also be used in Laravel.
 
 ```php
-use WpAi\Anthropic\Facades\Anthropic;
+use ErsinDemirtas\Anthropic\Facades\Anthropic;
 
 // Create a message
 $response = Anthropic::messages()
