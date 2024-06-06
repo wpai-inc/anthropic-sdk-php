@@ -1,12 +1,12 @@
 <?php
 
-namespace WpAi\Anthropic\Resources;
+namespace ErsinDemirtas\Anthropic\Resources;
 
 use InvalidArgumentException;
-use WpAi\Anthropic\Contracts\APIResource;
-use WpAi\Anthropic\Responses\MessageResponse;
-use WpAi\Anthropic\Responses\Response;
-use WpAi\Anthropic\Responses\StreamResponse;
+use ErsinDemirtas\Anthropic\Contracts\APIResource;
+use ErsinDemirtas\Anthropic\Responses\MessageResponse;
+use ErsinDemirtas\Anthropic\Responses\Response;
+use ErsinDemirtas\Anthropic\Responses\StreamResponse;
 
 class MessagesResource extends APIResource
 {
