@@ -1,8 +1,8 @@
 <?php
 
-namespace WpAi\Anthropic;
+namespace ErsinDemirtas\Anthropic;
 
-use WpAi\Anthropic\Resources\MessagesResource;
+use ErsinDemirtas\Anthropic\Resources\MessagesResource;
 
 class AnthropicAPI
 {
