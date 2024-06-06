@@ -1,10 +1,10 @@
 <?php
 
-namespace WpAi\Anthropic\Providers;
+namespace ErsinDemirtas\Anthropic\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use WpAi\Anthropic\AnthropicAPI;
+use ErsinDemirtas\Anthropic\AnthropicAPI;
 
 class AnthropicServiceProvider extends ServiceProvider
 {
