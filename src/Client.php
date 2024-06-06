@@ -1,13 +1,13 @@
 <?php
 
-namespace WpAi\Anthropic;
+namespace ErsinDemirtas\Anthropic;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
-use WpAi\Anthropic\Exceptions\ClientException as AnthropicClientException;
-use WpAi\Anthropic\Responses\ErrorResponse;
-use WpAi\Anthropic\Responses\StreamResponse;
+use ErsinDemirtas\Anthropic\Exceptions\ClientException as AnthropicClientException;
+use ErsinDemirtas\Anthropic\Responses\ErrorResponse;
+use ErsinDemirtas\Anthropic\Responses\StreamResponse;
 
 class Client
 {
