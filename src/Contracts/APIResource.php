@@ -1,8 +1,8 @@
 <?php
 
-namespace WpAi\Anthropic\Contracts;
+namespace ErsinDemirtas\Anthropic\Contracts;
 
-use WpAi\Anthropic\Client;
+use ErsinDemirtas\Anthropic\Client;
 
 abstract class APIResource
 {
