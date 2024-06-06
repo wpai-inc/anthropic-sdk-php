@@ -1,6 +1,6 @@
 <?php
 
-namespace WpAi\Anthropic\Exceptions;
+namespace ErsinDemirtas\Anthropic\Exceptions;
 
 use Exception;
 
