@@ -1,6 +1,6 @@
 <?php
 
-namespace WpAi\Anthropic\Responses;
+namespace ErsinDemirtas\Anthropic\Responses;
 
 use Psr\Http\Message\ResponseInterface;
 
