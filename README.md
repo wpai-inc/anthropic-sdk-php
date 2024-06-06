@@ -1,5 +1,10 @@
-# Anthropic PHP SDK
+# This is a fork of the https://github.com/wpai-inc/anthropic-sdk-php, added support for Laravel 11.
 
+[TODOS]
+
+[ ] - Add test cases
+
+# Anthropic PHP SDK
 This library provides convenient access to the Anthropic REST API from server-side PHP
 
 ## Installation
