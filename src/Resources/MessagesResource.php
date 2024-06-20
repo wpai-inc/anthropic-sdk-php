@@ -22,6 +22,8 @@ class MessagesResource extends APIResource
 
     private ?array $metadata = null;
 
+    private ?array $stopSequences = null;
+
     private ?float $temperature = null;
 
     private ?float $topP = null;
@@ -121,6 +123,7 @@ class MessagesResource extends APIResource
         $optional = array_filter([
             'system' => $this->system,
             'metadata' => $this->metadata,
+            'stop_sequences' => $this->stopSequences,
             'temperature' => $this->temperature,
             'top_p' => $this->topP,
             'top_k' => $this->topK,
@@ -141,6 +144,7 @@ class MessagesResource extends APIResource
         $this->messages = $options['messages'] ?? $this->messages;
         $this->system = $options['system'] ?? $this->system;
         $this->metadata = $options['metadata'] ?? $this->metadata;
+        $this->stopSequences = $options['stop_sequences'] ?? $this->stopSequences;
         $this->temperature = $options['temperature'] ?? $this->temperature;
         $this->topP = $options['top_p'] ?? $this->topP;
         $this->topK = $options['top_k'] ?? $this->topK;
