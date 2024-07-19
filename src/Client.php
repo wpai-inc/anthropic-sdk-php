@@ -21,24 +21,25 @@ class Client
         ]);
     }
 
-    public function post(string $endpoint, array $args): ResponseInterface|ErrorResponse
+    public function post(string $endpoint, array $args, array $extraHeaders = []): ResponseInterface|ErrorResponse
     {
         try {
             return $this->client->post($endpoint, [
                 'json' => $args,
+                'headers' => array_merge($this->client->getConfig('headers'), $extraHeaders),
             ]);
         } catch (RequestException $e) {
             $this->badRequest($e);
         }
-
     }
 
-    public function stream(string $endpoint, array $args): StreamResponse
+    public function stream(string $endpoint, array $args, array $extraHeaders = []): StreamResponse
     {
         try {
             $response = $this->client->post($endpoint, [
                 'json' => $args,
                 'stream' => true,
+                'headers' => array_merge($this->client->getConfig('headers'), $extraHeaders),
             ]);
 
             return new StreamResponse($response);
