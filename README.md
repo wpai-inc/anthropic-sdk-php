@@ -44,6 +44,12 @@ $anthropic->messages()->maxTokens(2048)->create($messages);
 
 All other optional [options](https://docs.anthropic.com/claude/reference/messages_post) can be set in the same ways.
 
+To include additional HTTP headers in the request, such as those required for enabling extended token limits, pass an array as the second argument to the `create()` method. For example, to enable support for 8192 max tokens:
+
+```php
+$response = Anthropic::messages()->create($query, [ 'anthropic-beta' => 'max-tokens-3-5-sonnet-2024-07-15' ]);
+```
+
 #### Stream
 
 A streamed response follows all of the same options as `create()` but may be invoked with:
@@ -57,6 +63,8 @@ while (! $stream->eof()) {
     flush();
 }
 ```
+
+You may set extra HTTP headers by passing an array as a second argument to `stream()`.
 
 ## Laravel
 
