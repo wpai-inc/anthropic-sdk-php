@@ -103,7 +103,7 @@ class MessagesResource extends APIResource
     public function create(array $options = [], array $extraHeaders = []): Response
     {
         $this->validateOptions($options);
-        $res = $this->client->post($this->endpoint, $this->request(), $extraHeaders);
+        $res = $this->client->post($this->endpoint, $this->getRequest(), $extraHeaders);
 
         return new MessageResponse($res);
     }
@@ -113,12 +113,12 @@ class MessagesResource extends APIResource
         $this->validateOptions($options);
 
         return $this->client->stream($this->endpoint, [
-            ...$this->request(),
+            ...$this->getRequest(),
             'stream' => true,
         ], $extraHeaders);
     }
 
-    private function request(): array
+    public function getRequest(): array
     {
         $optional = array_filter([
             'system' => $this->system,
