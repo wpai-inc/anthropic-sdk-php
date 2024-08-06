@@ -100,22 +100,22 @@ class MessagesResource extends APIResource
         return $this;
     }
 
-    public function create(array $options = []): Response
+    public function create(array $options = [], array $extraHeaders = []): Response
     {
         $this->validateOptions($options);
-        $res = $this->client->post($this->endpoint, $this->request());
+        $res = $this->client->post($this->endpoint, $this->request(), $extraHeaders);
 
         return new MessageResponse($res);
     }
 
-    public function stream(array $options = []): StreamResponse
+    public function stream(array $options = [], array $extraHeaders = []): StreamResponse
     {
         $this->validateOptions($options);
 
         return $this->client->stream($this->endpoint, [
             ...$this->request(),
             'stream' => true,
-        ]);
+        ], $extraHeaders);
     }
 
     private function request(): array
