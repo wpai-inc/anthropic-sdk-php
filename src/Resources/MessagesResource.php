@@ -16,7 +16,7 @@ class MessagesResource extends APIResource
 
     private int $maxTokens;
 
-    private array $messages;
+    private array $messages = [];
 
     private ?string $system = null;
 
