@@ -36,7 +36,10 @@ class StreamResponse extends Response implements IteratorAggregate
             $response = json_decode($data, true, flags: JSON_THROW_ON_ERROR);
 
             if (isset($response['error'])) {
-                throw new StreamException($response['error']);
+                $errorMessage = is_array($response['error']['message'])
+                    ? implode(', ', $response['error']['message'])
+                    : ($response['error']['message'] ?? 'Unknown stream error');
+                throw new StreamException($errorMessage);
             }
 
             yield $response;

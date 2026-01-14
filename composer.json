@@ -3,14 +3,19 @@
     "description": "This library provides convenient access to the Anthropic REST API from server-side PHP",
     "type": "library",
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.8",
-        "illuminate/support": "^9.52|^10.0|^11.0"
+        "illuminate/support": "^9.52|^10.0|^11.0|^12.0"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "WpAi\\Anthropic\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WpAi\\Anthropic\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -28,5 +33,8 @@
             "name": "Greg Hunt",
             "email": "greg@codewp.ai"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    }
 }

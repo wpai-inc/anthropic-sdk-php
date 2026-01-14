@@ -30,6 +30,16 @@ class MessagesResource extends APIResource
 
     private ?int $topK = null;
 
+    private ?array $tools = null;
+
+    private ?array $toolChoice = null;
+
+    private ?string $serviceTier = null;
+
+    private ?array $thinking = null;
+
+    private array $betaHeaders = [];
+
     public function model(string $model): self
     {
         $this->model = $model;
@@ -53,8 +63,12 @@ class MessagesResource extends APIResource
             if (! isset($message['role']) || ! isset($message['content'])) {
                 throw new InvalidArgumentException('Each message must have a "role" and "content" key.');
             }
-            if (! is_string($message['role']) || ! is_string($message['content'])) {
-                throw new InvalidArgumentException('Message "role" and "content" must be strings.');
+            if (! is_string($message['role'])) {
+                throw new InvalidArgumentException('Message "role" must be a string.');
+            }
+            // Content can be a string or an array of content blocks (for images, documents, etc.)
+            if (! is_string($message['content']) && ! is_array($message['content'])) {
+                throw new InvalidArgumentException('Message "content" must be a string or an array of content blocks.');
             }
         }
         $this->messages = $messages;
@@ -100,10 +114,57 @@ class MessagesResource extends APIResource
         return $this;
     }
 
+    public function tools(array $tools): self
+    {
+        $this->tools = $tools;
+        return $this;
+    }
+
+    public function toolChoice(string|array $toolChoice): self
+    {
+        $this->toolChoice = is_string($toolChoice)
+            ? ['type' => $toolChoice]
+            : $toolChoice;
+        return $this;
+    }
+
+    public function serviceTier(string $serviceTier): self
+    {
+        if (!in_array($serviceTier, ['auto', 'standard_only'])) {
+            throw new InvalidArgumentException('Service tier must be "auto" or "standard_only".');
+        }
+        $this->serviceTier = $serviceTier;
+        return $this;
+    }
+
+    public function thinking(array $thinking): self
+    {
+        if (isset($thinking['budget_tokens']) && $thinking['budget_tokens'] < 1024) {
+            throw new InvalidArgumentException('Thinking budget_tokens must be at least 1024.');
+        }
+        $this->thinking = $thinking;
+        return $this;
+    }
+
+    public function withBeta(string $beta): self
+    {
+        if (!in_array($beta, $this->betaHeaders)) {
+            $this->betaHeaders[] = $beta;
+        }
+        return $this;
+    }
+
+    public function stopSequences(array $sequences): self
+    {
+        $this->stopSequences = $sequences;
+        return $this;
+    }
+
     public function create(array $options = [], array $extraHeaders = []): Response
     {
         $this->validateOptions($options);
-        $res = $this->client->post($this->endpoint, $this->getRequest(), $extraHeaders);
+        $headers = array_merge($this->getBetaHeaders(), $extraHeaders);
+        $res = $this->client->post($this->endpoint, $this->getRequest(), $headers);
 
         return new MessageResponse($res);
     }
@@ -111,15 +172,25 @@ class MessagesResource extends APIResource
     public function stream(array $options = [], array $extraHeaders = []): StreamResponse
     {
         $this->validateOptions($options);
+        $headers = array_merge($this->getBetaHeaders(), $extraHeaders);
 
         return $this->client->stream($this->endpoint, [
             ...$this->getRequest(),
             'stream' => true,
-        ], $extraHeaders);
+        ], $headers);
+    }
+
+    private function getBetaHeaders(): array
+    {
+        if (empty($this->betaHeaders)) {
+            return [];
+        }
+        return ['anthropic-beta' => implode(',', $this->betaHeaders)];
     }
 
     public function getRequest(): array
     {
+        // Use callback to preserve valid falsy values like temperature=0.0 or top_k=0
         $optional = array_filter([
             'system' => $this->system,
             'metadata' => $this->metadata,
@@ -127,7 +198,11 @@ class MessagesResource extends APIResource
             'temperature' => $this->temperature,
             'top_p' => $this->topP,
             'top_k' => $this->topK,
-        ]);
+            'tools' => $this->tools,
+            'tool_choice' => $this->toolChoice,
+            'service_tier' => $this->serviceTier,
+            'thinking' => $this->thinking,
+        ], fn($value) => $value !== null);
 
         return [
             'model' => $this->model,
@@ -139,20 +214,52 @@ class MessagesResource extends APIResource
 
     private function validateOptions(array $options = []): void
     {
-        $this->model = $options['model'] ?? $this->model;
-        $this->maxTokens = $options['max_tokens'] ?? $this->maxTokens;
-        $this->messages = $options['messages'] ?? $this->messages;
-        $this->system = $options['system'] ?? $this->system;
-        $this->metadata = $options['metadata'] ?? $this->metadata;
-        $this->stopSequences = $options['stop_sequences'] ?? $this->stopSequences;
-        $this->temperature = $options['temperature'] ?? $this->temperature;
-        $this->topP = $options['top_p'] ?? $this->topP;
-        $this->topK = $options['top_k'] ?? $this->topK;
+        // Merge options with fluent-set values
+        if (isset($options['model'])) {
+            $this->model = $options['model'];
+        }
+        if (isset($options['max_tokens'])) {
+            $this->maxTokens($options['max_tokens']); // Use setter for validation
+        }
+        if (isset($options['messages'])) {
+            $this->messages($options['messages']); // Use setter for validation
+        }
+        if (isset($options['system'])) {
+            $this->system = $options['system'];
+        }
+        if (isset($options['metadata'])) {
+            $this->metadata = $options['metadata'];
+        }
+        if (isset($options['stop_sequences'])) {
+            $this->stopSequences = $options['stop_sequences'];
+        }
+        if (isset($options['temperature'])) {
+            $this->temperature($options['temperature']); // Use setter for validation
+        }
+        if (isset($options['top_p'])) {
+            $this->topP = $options['top_p'];
+        }
+        if (isset($options['top_k'])) {
+            $this->topK = $options['top_k'];
+        }
+        if (isset($options['tools'])) {
+            $this->tools = $options['tools'];
+        }
+        if (isset($options['tool_choice'])) {
+            $this->toolChoice($options['tool_choice']); // Use setter for normalization
+        }
+        if (isset($options['service_tier'])) {
+            $this->serviceTier($options['service_tier']); // Use setter for validation
+        }
+        if (isset($options['thinking'])) {
+            $this->thinking($options['thinking']); // Use setter for validation
+        }
 
+        // Final validation of required fields
         if (empty($this->model)) {
             throw new InvalidArgumentException('Model is required.');
         }
-        if (! isset($this->maxTokens)) {
+        if (!isset($this->maxTokens)) {
             throw new InvalidArgumentException('Max tokens is required.');
         }
         if (empty($this->messages)) {

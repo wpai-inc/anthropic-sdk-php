@@ -2,7 +2,9 @@
 
 namespace WpAi\Anthropic;
 
+use WpAi\Anthropic\Resources\BatchesResource;
 use WpAi\Anthropic\Resources\MessagesResource;
+use WpAi\Anthropic\Resources\TokenCountResource;
 
 class AnthropicAPI
 {
@@ -12,18 +14,28 @@ class AnthropicAPI
 
     private Client $client;
 
-    public function __construct(private string $apiKey, string $apiVersion = null)
+    public function __construct(private string $apiKey, ?string $apiVersion = null)
     {
         if ($apiVersion) {
             $this->version = $apiVersion;
         }
-        
+
         $this->client = new Client($this->baseUrl, $this->headers());
     }
 
     public function messages(): MessagesResource
     {
         return new MessagesResource($this->client);
+    }
+
+    public function countTokens(): TokenCountResource
+    {
+        return new TokenCountResource($this->client);
+    }
+
+    public function batches(): BatchesResource
+    {
+        return new BatchesResource($this->client);
     }
 
     private function headers(): array

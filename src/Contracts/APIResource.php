@@ -11,6 +11,4 @@ abstract class APIResource
     public function __construct(protected Client $client)
     {
     }
-
-    abstract public function create(array $options = []);
 }
